@@ -9,7 +9,7 @@ $ dataPull.py "50 First Dates" "E.T."
 ```
 Which would return: 
 ```sh
-Actors in 50 First Dates and "E.T. 
+Actors in 50 First Dates and "E.T."
 set([u'Drew Barrymore'])
 ```
 

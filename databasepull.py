@@ -2,12 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import MySQLdb as mdb
-import dataPull
-import re
-
-
-con = mdb.connect('localhost', 'testuser', 'test623', 'testdb');
-
 
 def checkFilmDatabase(FilmName, Connection):
   """Checks if we already have the meta data for this particular film stored in 
@@ -25,9 +19,9 @@ def checkFilmDatabase(FilmName, Connection):
     return characterset
 
 def storeFilmDatabase(FilmName,ActorSet, Connection):
-  with con:
+  with Connection:
     
-    cur = con.cursor()
+    cur = Connection.cursor()
     for Actor in ActorSet:
       datadict = {"FilmName":FilmName, "Actor":Actor.replace("'","\\'")}
       string= "INSERT INTO FilmActors(FilmName,ActorName) VALUES('%(FilmName)s','%(Actor)s')" % datadict
@@ -48,10 +42,9 @@ def checkFilmDatabaseExists(Connection):
 
 def createDatabaseTable(Connection):
   """Sets up our database table or resets it"""
-  with con:
-    cur = con.cursor()
+  with Connection:
+    cur = Connection.cursor()
     cur.execute("DROP TABLE IF EXISTS FilmActors")
     cur.execute("CREATE TABLE FilmActors(Id INT PRIMARY KEY AUTO_INCREMENT, Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, \
                   FilmName VARCHAR(256), ActorName VARCHAR(256))")
 
-checkFilmDatabaseExists(con)
