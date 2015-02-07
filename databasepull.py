@@ -2,6 +2,7 @@
 
 import MySQLdb as mdb
 
+
 def checkFilmDatabase(FilmName, Connection):
   """Checks if we already have the meta data for this particular film stored in 
    our local database"""
@@ -17,7 +18,7 @@ def checkFilmDatabase(FilmName, Connection):
         characterset.add(row[0])
     return characterset
 
-def storeFilmDatabase(FilmName,ActorSet, Connection):
+def storeFilmDatabase(FilmName, ActorSet, Connection):
   with Connection:
     
     cur = Connection.cursor()
@@ -46,4 +47,33 @@ def createDatabaseTable(Connection):
     cur.execute("DROP TABLE IF EXISTS FilmActors")
     cur.execute("CREATE TABLE FilmActors(Id INT PRIMARY KEY AUTO_INCREMENT, Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, \
                   FilmName VARCHAR(256), ActorName VARCHAR(256))")
+
+def createDatabaseLogTable(Connection):
+  """Sets up our database log table or resets it"""
+  with Connection:
+    cur = Connection.cursor()
+    cur.execute("DROP TABLE IF EXISTS RottenTomatoesLog")
+    cur.execute("CREATE TABLE RottenTomatoesLog(Id INT PRIMARY KEY AUTO_INCREMENT, Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, \
+                  Source VARCHAR(256), User VARCHAR(256), Inputs VARCHAR(512))")
+
+def logDatabaseActivity(Connection, Source, User, Inputs):
+  """Records Activity"""
+  with Connection:
+    cur = Connection.cursor()
+    datadict = {"Source":Source, "User":User.replace("'","\\'"), "Inputs":Inputs.replace("'","\\'")}
+    string= "INSERT INTO RottenTomatoesLog(Source, User, Inputs) VALUES('%(Source)s','%(User)s','%(Inputs)s')" % datadict
+    cur.execute(string)
+
+def checkLogDatabaseExists(Connection):
+  """Checks if we already have set up the logs database with our table"""
+
+  with Connection:
+    cur = Connection.cursor()
+    cur.execute(" SHOW TABLES LIKE '%%RottenTomatoesLog%%'")
+    rows = cur.fetchall()
+    for row in rows:
+      #print row[0]
+      if(row[0]) =="RottenTomatoesLog":
+        return True
+    return False
 

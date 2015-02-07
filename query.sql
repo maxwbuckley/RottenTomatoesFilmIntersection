@@ -7,3 +7,4 @@ select FilmName,trim(FilmName),  from FilmActors
 
 create table FilmActors as
 select Id, Timestamp as Timestamp, trim(FilmName) as FilmName, ActorName  from FilmActors2;
+

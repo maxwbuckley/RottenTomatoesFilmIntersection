@@ -6,12 +6,14 @@ import sys
 import json
 import urllib
 import urllib2
+import getpass
 import databasepull
 import MySQLdb as mdb
 
 baseurl = "http://api.rottentomatoes.com/api/public/v1.0.json"
 apikey = "?apikey=6rst6markqmfj86ab9ssgm6m"
 
+## connection takes ip address, username, password and database
 con = mdb.connect('localhost', 'testuser', 'test623', 'testdb');
 
 jsonresponse = urllib2.urlopen(baseurl+apikey).read()
@@ -66,7 +68,9 @@ def main():
   inputs = len(sys.argv)-1
   if not databasepull.checkFilmDatabaseExists(con):
     databasepull.createDatabaseTable(con)
-
+  if not databasepull.checkLogDatabaseExists(con):
+    databasepull.createDatabaseLogTable(con)
+  databasepull.logDatabaseActivity(con,"command-line",getpass.getuser(),str(sys.argv))
   if inputs ==0:
     print "Please input one film name to see the list of actors in that film or two film names seperated by a space to see what actors are in both films"
     print ""
