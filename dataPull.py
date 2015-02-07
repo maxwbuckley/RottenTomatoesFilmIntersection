@@ -73,12 +73,12 @@ def main():
     print "An example would by dataPull.py \"The Dallas Buyers Club\" \"Interstellar\" "
     print "The quotation marks are not necessary unless there are spaces in the film names"
   elif inputs ==1:
-    print "Actors in "+str(sys.argv[1])
+    print "Actors in "+str(sys.argv[1]).strip()
     print fetchCast(str(sys.argv[1]))
   elif inputs ==2:
-    print "Actors in "+str(sys.argv[1])+" and "+str(sys.argv[2])  
-    castA = fetchCast(str(sys.argv[1]))
-    castB = fetchCast(str(sys.argv[2]))
+    print "Actors in "+str(sys.argv[1]).strip()+" and "+str(sys.argv[2]).strip() 
+    castA = fetchCast(str(sys.argv[1]).strip())
+    castB = fetchCast(str(sys.argv[2]).strip())
     findIntersection(castA,castB)
   else:
     print "Error: Too many inputs"
