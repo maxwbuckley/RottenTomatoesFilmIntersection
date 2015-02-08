@@ -6,7 +6,7 @@ import MySQLdb as mdb
 def checkFilmDatabase(FilmName, Connection):
   """Checks if we already have the meta data for this particular film stored in 
    our local database"""
-
+  FilmName = FilmName.replace("'","\\'")
   with Connection: 
 
     cur = Connection.cursor()
@@ -23,7 +23,7 @@ def storeFilmDatabase(FilmName, ActorSet, Connection):
     
     cur = Connection.cursor()
     for Actor in ActorSet:
-      datadict = {"FilmName":FilmName, "Actor":Actor.replace("'","\\'")}
+      datadict = {"FilmName":FilmName.replace("'","\\'"), "Actor":Actor.replace("'","\\'")}
       string= "INSERT INTO FilmActors(FilmName,ActorName) VALUES('%(FilmName)s','%(Actor)s')" % datadict
       cur.execute(string)
 

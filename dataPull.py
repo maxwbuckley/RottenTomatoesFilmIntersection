@@ -61,8 +61,28 @@ def fetchCastOnline(filmname):
 def findIntersection(actorSetA, actorSetB):
   """This function takes two sets of actor names and returns their intersection. This could be two films actors or two pairs of overlaps depending on the use case"""
   overlap = actorSetA.intersection(actorSetB)
-  print overlap
+  overlap
   return(overlap)
+
+def decideRunType(film1="",film2=""):
+  if film1 =="" and film2 =="":
+    print "Please input one film name to see the list of actors in that film or two film names seperated by a space to see what actors are in both films"
+    print ""
+    print "An example would by dataPull.py \"The Dallas Buyers Club\" \"Interstellar\" "
+    print "The quotation marks are not necessary unless there are spaces in the film names"
+    return set([]) 
+  elif film2=="":
+    print "Actors in "+film1
+    cast = fetchCast(film1)
+    print cast
+    return cast
+  else:
+    print "Actors in "+film1+" and "+film2
+    castA = fetchCast(film1)
+    castB = fetchCast(film2)
+    intersection= findIntersection(castA,castB)
+    print intersection
+    return intersection
 
 def main():
   inputs = len(sys.argv)-1
@@ -72,18 +92,11 @@ def main():
     databasepull.createDatabaseLogTable(con)
   databasepull.logDatabaseActivity(con,"command-line",getpass.getuser(),str(sys.argv))
   if inputs ==0:
-    print "Please input one film name to see the list of actors in that film or two film names seperated by a space to see what actors are in both films"
-    print ""
-    print "An example would by dataPull.py \"The Dallas Buyers Club\" \"Interstellar\" "
-    print "The quotation marks are not necessary unless there are spaces in the film names"
+    decideRunType()
   elif inputs ==1:
-    print "Actors in "+str(sys.argv[1]).strip()
-    print fetchCast(str(sys.argv[1]))
+    decideRunType(str(sys.argv[1]).strip())
   elif inputs ==2:
-    print "Actors in "+str(sys.argv[1]).strip()+" and "+str(sys.argv[2]).strip() 
-    castA = fetchCast(str(sys.argv[1]).strip())
-    castB = fetchCast(str(sys.argv[2]).strip())
-    findIntersection(castA,castB)
+    decideRunType(str(sys.argv[1]).strip(),str(sys.argv[2]).strip())
   else:
     print "Error: Too many inputs"
     print "Please use one film name to see the actors in that film or two film names to see the actors specifically in both"
